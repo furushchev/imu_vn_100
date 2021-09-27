@@ -46,7 +46,7 @@ struct DiagnosedPublisher {
   template <typename MessageT>
   void Create(ros::NodeHandle& pnh, const std::string& topic,
               du::Updater& updater, double& rate) {
-    pub = pnh.advertise<MessageT>(topic, 1);
+    pub = pnh.advertise<MessageT>(topic, 2);
     du::FrequencyStatusParam freq_param(&rate, &rate, 0.01, 10);
     du::TimeStampStatusParam time_param(0, 0.5 / rate);
     diag = boost::make_shared<du::TopicDiagnostic>(topic, updater, freq_param,
