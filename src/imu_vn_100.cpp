@@ -121,24 +121,26 @@ void ImuVn100::LoadParameters() {
 
   pnh_.param("binary_output", binary_output_, true);
 
+  pnh_.param("queue_size", queue_size_, 1);
+
   FixImuRate();
   sync_info_.FixSyncRate();
 }
 
 void ImuVn100::CreateDiagnosedPublishers() {
   imu_rate_double_ = imu_rate_;
-  pd_imu_.Create<Imu>(pnh_, "imu", updater_, imu_rate_double_);
+  pd_imu_.Create<Imu>(pnh_, "imu", updater_, imu_rate_double_, queue_size_);
   if (enable_mag_) {
     pd_mag_.Create<MagneticField>(pnh_, "magnetic_field", updater_,
-                                  imu_rate_double_);
+                                  imu_rate_double_, queue_size_);
   }
   if (enable_pres_) {
     pd_pres_.Create<FluidPressure>(pnh_, "fluid_pressure", updater_,
-                                   imu_rate_double_);
+                                   imu_rate_double_, queue_size_);
   }
   if (enable_temp_) {
     pd_temp_.Create<Temperature>(pnh_, "temperature", updater_,
-                                 imu_rate_double_);
+                                 imu_rate_double_, queue_size_);
   }
 }
 
