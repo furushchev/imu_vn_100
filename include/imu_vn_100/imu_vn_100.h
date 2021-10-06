@@ -45,8 +45,8 @@ struct DiagnosedPublisher {
 
   template <typename MessageT>
   void Create(ros::NodeHandle& pnh, const std::string& topic,
-              du::Updater& updater, double& rate) {
-    pub = pnh.advertise<MessageT>(topic, 2);
+              du::Updater& updater, double& rate, int queue_size) {
+    pub = pnh.advertise<MessageT>(topic, queue_size);
     du::FrequencyStatusParam freq_param(&rate, &rate, 0.01, 10);
     du::TimeStampStatusParam time_param(0, 0.5 / rate);
     diag = boost::make_shared<du::TopicDiagnostic>(topic, updater, freq_param,
@@ -143,6 +143,8 @@ class ImuVn100 {
 
   SyncInfo sync_info_;
   ros::Duration imu_timestamp_offset_;
+  
+  int queue_size_ = 1;
 
   du::Updater updater_;
   DiagnosedPublisher pd_imu_, pd_mag_, pd_pres_, pd_temp_;

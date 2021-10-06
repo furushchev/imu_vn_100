@@ -7,6 +7,8 @@
     <arg name="baudrate" default="921600"/>
     <arg name="imu_rate" default="800"/>
 
+    <arg name="queue_size" default="1"/>
+
     <!-- Sync out settings -->
     <!-- to disable this just set it to < 0 -->
     <arg name="sync_rate" default="20"/>
@@ -24,6 +26,7 @@
         <param name="baudrate" type="int" value="$(arg baudrate)"/>
         <param name="frame_id" type="string" value="$(arg frame_id)"/>
         <param name="imu_rate" type="int" value="$(arg imu_rate)"/>
+        <param name="queue_size" type="int" value="$(arg queue_size)"/>
         <param name="binary_output" type="bool" value="$(arg binary_output)"/>
         <param name="enable_mag" type="bool" value="$(arg enable_mag)"/>
         <param name="enable_pres" type="bool" value="$(arg enable_pres)"/>
