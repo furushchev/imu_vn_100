@@ -145,6 +145,8 @@ class ImuVn100 {
   ros::Duration imu_timestamp_offset_;
   
   int queue_size_ = 1;
+  uint16_t binary_async_mode_ = BINARY_ASYNC_MODE_SERIAL_1;
+  std::string binary_async_mode_input_ = "SERIAL_1";
 
   du::Updater updater_;
   DiagnosedPublisher pd_imu_, pd_mag_, pd_pres_, pd_temp_;
