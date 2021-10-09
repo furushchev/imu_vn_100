@@ -123,6 +123,16 @@ void ImuVn100::LoadParameters() {
 
   pnh_.param("queue_size", queue_size_, 1);
 
+  pnh_.param<std::string>("binary_async_mode", binary_async_mode_input_, "SERIAL_1");
+  if (binary_async_mode_input_ == "SERIAL_1")
+  {
+    binary_async_mode_ = BINARY_ASYNC_MODE_SERIAL_1;
+  }
+  else if (binary_async_mode_input_ == "SERIAL_2")
+  {
+    binary_async_mode_ = BINARY_ASYNC_MODE_SERIAL_2;
+  }
+
   FixImuRate();
   sync_info_.FixSyncRate();
 }
@@ -222,7 +232,7 @@ void ImuVn100::Stream(bool async) {
     if (binary_output_) {
       // Set the binary output data type and data rate
       VnEnsure(vn100_setBinaryOutput1Configuration(
-          &imu_, BINARY_ASYNC_MODE_SERIAL_1, kBaseImuRate / imu_rate_,
+          &imu_, binary_async_mode_, kBaseImuRate / imu_rate_,
           BG1_QTN | BG1_IMU | BG1_MAG_PRES | BG1_SYNC_IN_CNT | BG1_TIME_SYNC_IN,
           BG3_NONE, BG5_NONE, true));
     } else {

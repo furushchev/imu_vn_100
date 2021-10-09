@@ -16,6 +16,8 @@
 
     <arg name="binary_output" default="true"/>
 
+    <arg name="binary_async_mode" default="SERIAL_1"/>
+
     <!-- Ros Topic settings -->
     <arg name="enable_mag" default="true"/>
     <arg name="enable_pres" default="true"/>
@@ -33,5 +35,6 @@
         <param name="enable_temp" type="bool" value="$(arg enable_temp)"/>
         <param name="sync_rate" type="int" value="$(arg sync_rate)"/>
         <param name="sync_pulse_width_us" type="int" value="$(arg sync_pulse_width_us)"/>
+        <param name="binary_async_mode" type="string" value="$(arg binary_async_mode)"/>
     </node>
 </launch>
