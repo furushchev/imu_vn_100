@@ -1806,7 +1806,7 @@ void* vndevice_communicationHandler(
 
 							}
 							else {
-
+								fprintf(stderr, "crc check failed\n");
 								/* We did not have a valid data packet. Let's
 								   process the data we have to see if there are
 								   any packets contained in it. */
