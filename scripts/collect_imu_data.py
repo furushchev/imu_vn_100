@@ -1,4 +1,5 @@
 import os
+import csv
 import rospy
 from sensor_msgs.msg import Imu
 
@@ -11,12 +12,12 @@ def imu_cb(data):
     global g_count
     if g_count < SAMPLE_NUM:
         with open(FILE, 'a') as f:
+            writer = csv.writer(f)
             line = (
-                f'{data.angular_velocity.x}, {data.angular_velocity.y}, '
-                f'{data.angular_velocity.z}, {data.linear_acceleration.x}, '
-                f'{data.linear_acceleration.y}, {data.linear_acceleration.z}\n'
-            )
-            f.write(line)
+                f'{data.angular_velocity.x}{data.angular_velocity.y}'
+                f'{data.angular_velocity.z}{data.linear_acceleration.x}'
+                f'{data.linear_acceleration.y}{data.linear_acceleration.z}')
+            writer.writerow(line)
 
     if g_count == SAMPLE_NUM:
         print('collect finish')
