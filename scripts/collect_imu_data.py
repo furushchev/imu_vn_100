@@ -14,10 +14,11 @@ def imu_cb(data):
     if g_count < SAMPLE_NUM:
         with open(FILE, 'a') as f:
             writer = csv.writer(f)
-            line = (
-                f'{data.angular_velocity.x}{data.angular_velocity.y}'
-                f'{data.angular_velocity.z}{data.linear_acceleration.x}'
-                f'{data.linear_acceleration.y}{data.linear_acceleration.z}')
+            line = [
+                data.angular_velocity.x, data.angular_velocity.y,
+                data.angular_velocity.z, data.linear_acceleration.x,
+                data.linear_acceleration.y, data.linear_acceleration.z
+            ]
             writer.writerow(line)
 
     if g_count == SAMPLE_NUM:
