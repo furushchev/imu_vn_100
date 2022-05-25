@@ -31,7 +31,9 @@ void RosVector3FromVnVector3(geometry_msgs::Vector3& ros_vec3,
 void RosQuaternionFromVnQuaternion(geometry_msgs::Quaternion& ros_quat,
                                    const VnQuaternion& vn_quat);
 void FillImuMessage(sensor_msgs::Imu& imu_msg,
-                    const VnDeviceCompositeData& data, bool binary_output);
+                    const VnDeviceCompositeData& data,
+                    const bool binary_output,
+                    const bool flip_angular_velocity);
 
 void AsyncListener(void* sender, VnDeviceCompositeData* data) {
   imu_vn_100_ptr->PublishData(*data);
@@ -120,6 +122,7 @@ void ImuVn100::LoadParameters() {
   pnh_.param("sync_pulse_width_us", sync_info_.pulse_width_us, 1000);
 
   pnh_.param("binary_output", binary_output_, true);
+  pnh_.param("flip_angular_velocity", flip_angular_velocity_, false);
 
   pnh_.param("queue_size", queue_size_, 1);
 
@@ -286,7 +289,7 @@ void ImuVn100::PublishData(const VnDeviceCompositeData& data) {
   imu_msg.header.stamp = t_now - imu_timestamp_offset_;
   imu_msg.header.frame_id = frame_id_;
 
-  FillImuMessage(imu_msg, data, binary_output_);
+  FillImuMessage(imu_msg, data, binary_output_, flip_angular_velocity_);
   pd_imu_.Publish(imu_msg);
 
   if (enable_mag_) {
@@ -358,15 +361,27 @@ void RosQuaternionFromVnQuaternion(geometry_msgs::Quaternion& ros_quat,
 }
 
 void FillImuMessage(sensor_msgs::Imu& imu_msg,
-                    const VnDeviceCompositeData& data, bool binary_output) {
+                    const VnDeviceCompositeData& data,
+                    const bool binary_output,
+                    const bool flip_angular_velocity) {
   if (binary_output) {
     RosQuaternionFromVnQuaternion(imu_msg.orientation, data.quaternion);
-    // NOTE: The IMU angular velocity and linear acceleration outputs are
-    // swapped. And also why are they different?
-    RosVector3FromVnVector3(imu_msg.angular_velocity,
-                            data.accelerationUncompensated);
-    RosVector3FromVnVector3(imu_msg.linear_acceleration,
-                            data.angularRateUncompensated);
+    if (flip_angular_velocity)
+    {
+      // NOTE: The IMU angular velocity and linear acceleration outputs are
+      // swapped. And also why are they different?
+      RosVector3FromVnVector3(imu_msg.angular_velocity,
+                              data.accelerationUncompensated);
+      RosVector3FromVnVector3(imu_msg.linear_acceleration,
+                              data.angularRateUncompensated);
+    }
+    else
+    {
+      RosVector3FromVnVector3(imu_msg.linear_acceleration,
+                              data.accelerationUncompensated);
+      RosVector3FromVnVector3(imu_msg.angular_velocity,
+                              data.angularRateUncompensated);
+    }
   } else {
     RosVector3FromVnVector3(imu_msg.linear_acceleration, data.acceleration);
     RosVector3FromVnVector3(imu_msg.angular_velocity, data.angularRate);

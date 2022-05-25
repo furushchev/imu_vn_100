@@ -140,6 +140,7 @@ class ImuVn100 {
   bool enable_pres_ = true;
   bool enable_temp_ = true;
   bool binary_output_ = true;
+  bool flip_angular_velocity_ = true;
 
   SyncInfo sync_info_;
   ros::Duration imu_timestamp_offset_;
